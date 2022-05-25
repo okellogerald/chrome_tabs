@@ -26,7 +26,10 @@ class _TabsTopBarState extends ConsumerState<TabsTopBar> {
         color: AppColors.primary,
         child: Row(
           children: [
-            ...(tabs.map((tab) {
+            ...(List.generate(tabs.length, (index) {
+              final tab = tabs[index];
+              final selectedIndex =
+                  tabs.indexWhere((tab) => tab.id == currentTabID);
               final isSelected = currentTabID == tab.id;
               final tabBackgroundColor =
                   isSelected ? AppColors.selectedTabColor : Colors.black;
@@ -35,10 +38,11 @@ class _TabsTopBarState extends ConsumerState<TabsTopBar> {
                 color: tabBackgroundColor,
                 child: TabTile(tab),
                 isCurrentTab: isSelected,
+                hideLeftAngle: index == selectedIndex + 1,
                 onTap: () =>
                     ref.read(currentTabIDProvider.state).state = tab.id,
               ));
-            }).toList()),
+            })),
             Expanded(
                 child: Align(
                     alignment: Alignment.centerLeft,

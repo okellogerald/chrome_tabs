@@ -5,12 +5,13 @@ class TabContainer extends StatefulWidget {
   final Widget child;
   final Color color;
   final VoidCallback onTap;
-  final bool isCurrentTab;
+  final bool isCurrentTab, hideLeftAngle;
   const TabContainer(
       {required this.child,
       required this.color,
       required this.onTap,
       required this.isCurrentTab,
+      required this.hideLeftAngle,
       super.key});
 
   @override
@@ -38,7 +39,8 @@ class _TabContainerState extends State<TabContainer> {
         setState(() {});
       },
       child: CustomPaint(
-        painter: TabContainerPainter(tabColor ?? widget.color),
+        painter:
+            TabContainerPainter(tabColor ?? widget.color, widget.hideLeftAngle),
         child: widget.child,
       ),
     );
@@ -47,7 +49,8 @@ class _TabContainerState extends State<TabContainer> {
 
 class TabContainerPainter extends CustomPainter {
   final Color color;
-  TabContainerPainter(this.color);
+  final bool hideLeftAngle;
+  TabContainerPainter(this.color, this.hideLeftAngle);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -55,16 +58,21 @@ class TabContainerPainter extends CustomPainter {
       ..color = color
       ..strokeCap = StrokeCap.round;
     final path = Path();
-    path.moveTo(10, 0);
-    path.lineTo(size.width - 15, 0);
-    path.quadraticBezierTo(size.width, 2, size.width, 15);
-    path.lineTo(size.width, size.height - 10);
+    path.moveTo(8, 0);
+    path.lineTo(size.width - 8, 0);
+    path.quadraticBezierTo(size.width, .5, size.width, 8);
+    path.lineTo(size.width, size.height - 8);
     path.quadraticBezierTo(
-        size.width, size.height - 5, size.width + 15, size.height);
-    path.lineTo(-15, size.height);
-    path.quadraticBezierTo(0, size.height - 5, 0, size.height - 15);
-    path.lineTo(0, 15);
-    path.quadraticBezierTo(0, 2, 15, 0);
+        size.width, size.height - .5, size.width + 8, size.height);
+    if (hideLeftAngle) {
+      path.lineTo(8, size.height);
+      path.quadraticBezierTo(0, size.height - .5, 0, size.height - 8);
+    } else {
+      path.lineTo(-8, size.height);
+      path.quadraticBezierTo(0, size.height - .5, 0, size.height - 8);
+    }
+    path.lineTo(0, 8);
+    path.quadraticBezierTo(0, .5, 8, 0);
     canvas.drawPath(path, paint);
   }
 
