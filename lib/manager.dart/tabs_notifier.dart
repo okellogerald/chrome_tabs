@@ -32,10 +32,18 @@ class TabsNotifier extends StateNotifier<List<Tab>> {
     // checking if there are tabs left after removing the current tab
     final hasOtherTabs = tabs.isNotEmpty;
     if (hasOtherTabs) {
-      // checking if the closed tab is the first tab
-      final nextTabIndex = (index - 1).isNegative ? 0 : index - 1;
-      final nextTab = tabs[nextTabIndex];
-      ref.read(currentTabIDProvider.state).state = nextTab.id;
+      final currentTabID = ref.read(currentTabIDProvider);
+      if (tabID == currentTabID) {
+        // checking if the closed tab is the first tab
+        final nextTabIndex = (index - 1).isNegative ? 0 : index - 1;
+        final nextTab = tabs[nextTabIndex];
+        ref.read(currentTabIDProvider.state).state = nextTab.id;
+      }
+    } else {
+      // if all tabs are closed
+      tabs.add(Tab.home());
+      _newTabIndex = 2;
+      ref.read(currentTabIDProvider.state).state = Tab.home().id;
     }
     state = tabs;
   }
