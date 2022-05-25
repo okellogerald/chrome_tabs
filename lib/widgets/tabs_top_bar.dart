@@ -2,6 +2,7 @@ import 'package:chrome_tabs/manager.dart/tabs_details.dart';
 import 'package:chrome_tabs/manager.dart/tabs_notifier.dart';
 import 'package:chrome_tabs/theme/colors.dart';
 import 'package:chrome_tabs/widgets/app_icon_button.dart';
+import 'package:chrome_tabs/widgets/separator.dart';
 import 'package:chrome_tabs/widgets/tab_container.dart';
 import 'package:chrome_tabs/widgets/tab_tile.dart';
 import 'package:flutter/material.dart';
@@ -31,17 +32,30 @@ class _TabsTopBarState extends ConsumerState<TabsTopBar> {
               final selectedIndex =
                   tabs.indexWhere((tab) => tab.id == currentTabID);
               final isSelected = currentTabID == tab.id;
+
               final tabBackgroundColor =
                   isSelected ? AppColors.selectedTabColor : Colors.black;
+
+              final hasSeparator =
+                  index != selectedIndex - 1 && index != selectedIndex;
               return Flexible(
-                  child: TabContainer(
-                color: tabBackgroundColor,
-                child: TabTile(tab),
-                isCurrentTab: isSelected,
-                hideLeftAngle: index == selectedIndex + 1,
-                onTap: () =>
-                    ref.read(currentTabIDProvider.state).state = tab.id,
-              ));
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: TabContainer(
+                        color: tabBackgroundColor,
+                        child: TabTile(tab),
+                        isCurrentTab: isSelected,
+                        hideLeftAngle: index == selectedIndex + 1,
+                        onTap: () =>
+                            ref.read(currentTabIDProvider.state).state = tab.id,
+                      ),
+                    ),
+                    if (hasSeparator) const Separator()
+                  ],
+                ),
+              );
             })),
             Expanded(
                 child: Align(

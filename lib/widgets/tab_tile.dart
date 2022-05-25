@@ -16,7 +16,7 @@ class TabTile extends ConsumerWidget {
 
     return Container(
       height: 35,
-      constraints: const BoxConstraints(maxWidth: 300),
+      constraints: const BoxConstraints(maxWidth: 250),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.symmetric(horizontal: 7),
       child: Row(
